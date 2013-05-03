@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Drawki</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        
+        <div class="container">
+            
+            <div id="intro">
+
+              <div class="container-narrow">
+                <div class="jumbotron">
+                  <h1>Drawki</h1>
+                  <!--
+                  <p id="intro-description" class="lead"></p> -->
+                </div>
+              </div>
+
+              <div id="sign-in-container" class="hero-unit hero-sign-in">
+    
+                <form action="" id="sign-in" class="form-stacked">
+                  <fieldset>
+                    <div class="clearfix">
+                      <label>Name</label>
+                      <div class="input">
+                        <input type="text" id="user-name" placeholder="Your name">
+                      </div>
+                    </div>
+                    <div class="clearfix">
+                     <label>Channel</label>
+                       <div class="input">
+                        <input type="text" id="channel" placeholder="Channel you want to join">
+                       </div>
+                    </div>
+                    <input type="submit" value="Let's draw! &raquo;" class="btn btn-large btn-primary">
+                  </fieldset>
+                </form>
+               
+              </div>
+
+            </div>
+
+        </div>
+        
+
+        <div id="drawki" class="container-fluid">
+
+            <div class="row-fluid no-space" style="margin-top: 50px">
+
+                <div id="drawingBoard" class="span9">
+                    
+                    <p id="connected-users-number">
+                      <i class="icon-user"></i>
+                      <span id="number-of-users"></span>
+                    </p>
+                    
+                    <canvas id="drawCanvas"></canvas>
+                    
+                    <!--
+                    <div class="btn-toolbar">
+                        <div class="btn-group">
+                            <input type="button" id="clearButton" value="Clear">
+                            <input type="button" id="eraserButton" value="Eraser">
+                            <input type="button" id="pencilButton" value="Pencil">
+                        </div>
+                    </div>
+                    -->
+              
+                  <p id="notifications"></p>
+
+                </div>
+                
+                
+                <div id="chat" class="span3">
+
+                    <div id="chat-messages">
+                      <ul id="chat-messages-list" class="unstyled">
+                      </ul>
+                    </div>
+                    
+                    <div id="chat-input">
+                      <input type="text" id="message-to-send" class="input-block-level" placeholder="Your message">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        
+
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="http://drawki.aws.af.cm/socket.io/socket.io.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
