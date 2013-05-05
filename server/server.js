@@ -92,7 +92,7 @@ io.sockets.on('connection', function(client) {
 	});
 
 	client.on('drawing', function(origX, origY, destX, destY) {
-		io.sockets.in(client.channel).emit('drawing', origX, origY, destX, destY, client.username);
+		client.in(client.channel).broadcast.emit('drawing', origX, origY, destX, destY, client.username);
 	});
 
 

@@ -88,6 +88,7 @@ jQuery(function($){
 		lastY = e.pageY - this.offsetTop;
 		iosocket.emit('drawing', lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop);
 		iosocket.emit('updateUsersDrawingList');
+		draw(lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop);
 		drawing = true;
 	});
 
@@ -95,6 +96,7 @@ jQuery(function($){
 		if(drawing) {
 			if($.now() - lastEmit > 20) {
 				iosocket.emit('drawing', lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+				draw(lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
 				lastEmit = $.now();
 				lastX = e.pageX - this.offsetLeft;
 				lastY = e.pageY - this.offsetTop;
@@ -159,7 +161,7 @@ jQuery(function($){
 
 			case 2: 
 				$('#notifications').text(
-					usersCurrentlyDrawing[0] + 'and' + 
+					usersCurrentlyDrawing[0] + ' and ' + 
 					usersCurrentlyDrawing[1] + ' are drawing...'
 					);
 				break;
