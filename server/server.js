@@ -19,8 +19,21 @@ io.set('transports', ['xhr-polling']);
 var utils = require('./utils');
 var channelsFilePath = './channels.json';
 
+
 io.sockets.on('connection', function(client) {
 
+	/* Drawing options */
+	var drawingSizes = {
+		small: 1,
+		medium: 4,
+		large: 9
+	};
+
+	var defaultDrawingOptions = {
+		color: "#000000",
+		eraser: "#3399cc",
+		size: drawingSizes.small
+	};
 
 
 	/**********************/
@@ -45,7 +58,9 @@ io.sockets.on('connection', function(client) {
 	    client.username = userName;
 	    client.channel = channelName;
 	    client.signedIn = true;
+	    client.drawingOptions = defaultDrawingOptions;
 	    io.sockets.in(client.channel).emit('userSignedIn', userName, channelName);
+	    io.sockets.in(client.channel).emit('initOptions', defaultDrawingOptions);
 	    client.in(client.channel).broadcast.emit('requestCurrentDrawing');
     	updateConnectedUsers(client.channel);
   	});
@@ -92,17 +107,23 @@ io.sockets.on('connection', function(client) {
 	});
 
 	client.on('drawing', function(origX, origY, destX, destY) {
-		client.in(client.channel).broadcast.emit('drawing', origX, origY, destX, destY, client.username);
+		client.in(client.channel).broadcast.emit('drawing', origX, origY, destX, destY, client.drawingOptions);
 	});
-
 
 	client.on('eraseDrawing', function() {
 		io.sockets.in(client.channel).emit('eraseDrawing');
 	});
 
-
 	client.on('changeDrawingColor', function(color) {
-		io.sockets.in(client.channel).emit('changeDrawingColor', color);
+		client.drawingOptions.color = color;
+	});
+
+	client.on('changeDrawingSize', function(size) {
+		client.drawingOptions.size = size;
+	});
+
+	client.on('resetPath', function() {
+		io.sockets.in(client.channel).emit('resetPath');
 	});
 
 
