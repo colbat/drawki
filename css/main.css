@@ -93,3 +93,7 @@ body {
 #chat-input input {
 	margin-bottom: 0px;
 }
+
+.clearButton {
+	background: url(http://www.findsoft.net/Icons/Remove-Duplicate-Files-Pro-64536.gif);
+}

@@ -7,6 +7,7 @@
 jQuery(function($){
 
 	var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
+	var iosocket = io.connect("http://localhost:1337", {'sync disconnect on unload': true});
 
 	var canvas = $('#drawCanvas');
 	var context = canvas[0].getContext('2d');
@@ -18,8 +19,20 @@ jQuery(function($){
 
 	/* Configure the canvas */
 	var backgroundColor = $('#drawCanvas').css('background-color');
-	var currentTool = "pencil";
-	var drawColor = "#000000";
+
+	var drawingSizes = {
+		small: 1,
+		medium: 4,
+		large: 9
+	};
+
+	var drawingColors = {
+		pencil: "#000000",
+		eraser: "#3399cc"
+	};
+
+
+	var drawingOptions;
 
 
 
@@ -42,13 +55,19 @@ jQuery(function($){
 		canvas[0].height = originalHeight;
 
 		/* Set up context */
-		context.strokeStyle = drawColor;
 		context.lineCap = "round";
-		context.lineWidth = 4;
-
+		
 		iosocket.emit('signIn', {
 			userName: $('#user-name').val(),
 			channelName: $('#channel').val()
+		});
+
+		/* Set up color picker */
+		$('select[name="colorpicker"]').simplecolorpicker({
+	  		picker: true
+		}).on('change', function() {
+	  		iosocket.emit('changeDrawingColor', $('select[name="colorpicker"]').val());
+	  		drawingOptions.color = $('select[name="colorpicker"]').val();
 		});
 	});
 
@@ -57,6 +76,9 @@ jQuery(function($){
 		$("#chat-messages-list").append("<li class='message-item text-success'>" + username + " has signed in.</li>");
 	});
 
+	iosocket.on("initOptions", function(defaultDrawingOptions) {
+		drawingOptions = defaultDrawingOptions;
+	})
 
 	iosocket.on("updateConnectedUsers", function(connectedUsers) {
 		$("#number-of-users").text(connectedUsers.length);
@@ -76,7 +98,9 @@ jQuery(function($){
 	/**
 	* Add points to the path and draw the line
 	*/
-	var draw = function(origX, origY, destX, destY) {
+	var draw = function(origX, origY, destX, destY, drawingOptions) {
+		context.strokeStyle = drawingOptions.color;
+		context.lineWidth = drawingOptions.size;
 		context.moveTo(origX, origY);
 		context.lineTo(destX, destY);
 		context.stroke();
@@ -88,7 +112,7 @@ jQuery(function($){
 		lastY = e.pageY - this.offsetTop;
 		iosocket.emit('drawing', lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop);
 		iosocket.emit('updateUsersDrawingList');
-		draw(lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop);
+		draw(lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop, drawingOptions);
 		drawing = true;
 	});
 
@@ -96,7 +120,7 @@ jQuery(function($){
 		if(drawing) {
 			if($.now() - lastEmit > 20) {
 				iosocket.emit('drawing', lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-				draw(lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+				draw(lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop, drawingOptions);
 				lastEmit = $.now();
 				lastX = e.pageX - this.offsetLeft;
 				lastY = e.pageY - this.offsetTop;
@@ -107,6 +131,7 @@ jQuery(function($){
 	canvas.mouseup(function(e) {
 		if(drawing) {
 			iosocket.emit('updateUsersDrawingList');
+			iosocket.emit('resetPath');
 			drawing = false;
 		}
 	});
@@ -114,6 +139,7 @@ jQuery(function($){
 	canvas.mouseleave(function(e) {
 		if(drawing) {
 			iosocket.emit('updateUsersDrawingList');
+			iosocket.emit('resetPath');
 			drawing = false;
 		}
 	});
@@ -130,20 +156,18 @@ jQuery(function($){
         };
 	});
 
-	iosocket.on('drawing', function(origX, origY, destX, destY) {
-		draw(origX, origY, destX, destY);
+	iosocket.on('drawing', function(origX, origY, destX, destY, drawingOptions) {
+		draw(origX, origY, destX, destY, drawingOptions);
 	});
-
 
 	iosocket.on('eraseDrawing', function() {
 		context.clearRect(0, 0, canvas[0].width, canvas[0].height);
 		context.beginPath();
 	});
 
-
-	iosocket.on('changeDrawingColor', function(color) {
-		drawColor = color;
-	});
+	iosocket.on('resetPath', function() {
+		context.beginPath();
+	})
 
 
 	/**
@@ -188,14 +212,38 @@ jQuery(function($){
 	});
 
 	$('#eraserButton').click(function() {
-		currentTool = "eraser";
-		drawColor = rgb2hex(backgroundColor);
-		iosocket.emit('changeDrawColor', drawColor);
+		iosocket.emit('changeDrawingColor', drawingColors.eraser);
+		drawingOptions.color = drawingColors.eraser;
+		$('#pencilButton').removeClass('disabled');
+		$(this).addClass('disabled');
 	});
 
 	$('#pencilButton').click(function() {
-		drawColor = "#000000";
-		iosocket.emit('changeDrawColor', drawColor);
+		iosocket.emit('changeDrawingColor', $('select[name="colorpicker"]').val());
+		drawingOptions.color = $('select[name="colorpicker"]').val();
+		$('#eraserButton').removeClass('disabled');
+		$(this).addClass('disabled');
+	});
+
+	$('.dropdown-menu .small').click(function() {
+		iosocket.emit('changeDrawingSize', drawingSizes.small);
+		drawingOptions.size = drawingSizes.small;
+		$('.dropdown-menu li').removeClass('active');
+		$(this).addClass('active');
+	});
+
+	$('.dropdown-menu .medium').click(function() {
+		iosocket.emit('changeDrawingSize', drawingSizes.medium);
+		drawingOptions.size = drawingSizes.medium;
+		$('.dropdown-menu li').removeClass('active');
+		$(this).addClass('active');
+	});
+
+	$('.dropdown-menu .large').click(function() {
+		iosocket.emit('changeDrawingSize', drawingSizes.large);
+		drawingOptions.size = drawingSizes.large;
+		$('.dropdown-menu li').removeClass('active');
+		$(this).addClass('active');
 	});
 
 
@@ -216,12 +264,13 @@ jQuery(function($){
 		$("#chat-messages").animate({scrollTop: $("#chat-messages").prop('scrollHeight')}, 50);
 	});
 
-	
+
 
 	/*********/
 	/* Tools */
 	/*********/
 
+	/*
 	function rgb2hex(rgb) {
  		rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
  		return "#" +
@@ -229,5 +278,6 @@ jQuery(function($){
   			("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
   			("0" + parseInt(rgb[3],10).toString(16)).slice(-2);
 	}
+	*/
 
 });
