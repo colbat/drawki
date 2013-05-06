@@ -7,7 +7,6 @@
 jQuery(function($){
 
 	var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
-	var iosocket = io.connect("http://localhost:1337", {'sync disconnect on unload': true});
 
 	var canvas = $('#drawCanvas');
 	var context = canvas[0].getContext('2d');
