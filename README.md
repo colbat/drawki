@@ -7,8 +7,8 @@ The main goal of this project is to learn how to use Node.js and socket.io.
 Channels
 --------
 
-You can speak and share your drawings with people who are in the same channel as you.
-When you are asked to sign-in on the home page, you must choose a channel to join in.
+You can speak and share your drawings with people who are in the same channel as yours.
+When you are asked to sign-in on the home page, you got to choose a channel to join in.
 * If the channel already exists, you will join it.
 * If the channel doesn't exist yet, it will be created.
 
