@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Drawki</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
@@ -63,7 +63,7 @@
 
         <div id="drawki" class="container-fluid">
 
-            <div class="row-fluid no-space" style="margin-top: 50px">
+            <div class="row-fluid no-space">
 
                 <div id="drawingBoard" class="span9">
                     
@@ -92,34 +92,45 @@
                             </button>
                         </div>
 
-                        <div class="btn-group">
+                        <div class="btn-group dropup">
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                               Size
                               <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                              <li class="small active"><a tabindex="-1" href="#">Small</a></li>
-                              <li class="medium"><a tabindex="-1" href="#">Medium</a></li>
-                              <li class="large"><a tabindex="-1" href="#">Large</a></li>
+                              <li class="small"><a tabindex="-1">Small</a></li>
+                              <li class="medium active"><a tabindex="-1">Medium</a></li>
+                              <li class="large"><a tabindex="-1">Large</a></li>
                             </ul>
                         </div>
 
                         <div class="btn-group">
                           <button id="selectColorButton" class="btn">
                             <select name="colorpicker">
-                              <option value="#000000">Black</option>
-                              <option value="#7bd148">Green</option>
-                              <option value="#5484ed">Bold blue</option>
-                              <option value="#a4bdfc">Blue</option>
-                              <option value="#46d6db">Turquoise</option>
-                              <option value="#7ae7bf">Light green</option>
-                              <option value="#51b749">Bold green</option>
-                              <option value="#fbd75b">Yellow</option>
-                              <option value="#ffb878">Orange</option>
-                              <option value="#ff887c">Red</option>
-                              <option value="#dc2127">Bold red</option>
-                              <option value="#dbadff">Purple</option>
-                              <option value="#e1e1e1">Gray</option>
+                              <option value="#000000"></option>
+                              <option value="#ac725e"></option>
+                              <option value="#d06b64"></option>
+                              <option value="#f83a22"></option>
+                              <option value="#fa573c"></option>
+                              <option value="#ff7537"></option>
+                              <option value="#ffad46"></option>
+                              <option value="#42d692"></option>
+                              <option value="#16a765"></option>
+                              <option value="#7bd148"></option>
+                              <option value="#b3dc6c"></option>
+                              <option value="#fbe983"></option>
+                              <option value="#fad165"></option>
+                              <option value="#92e1c0"></option>
+                              <option value="#9fe1e7"></option>
+                              <option value="#9fc6e7"></option>
+                              <option value="#4986e7"></option>
+                              <option value="#9a9cff"></option>
+                              <option value="#b99aff"></option>
+                              <option value="#c2c2c2"></option>
+                              <option value="#cca6ac"></option>
+                              <option value="#f691b2"></option>
+                              <option value="#cd74e6"></option>
+                              <option value="#a47ae2"></option>
                             </select>
                           </button>
                         </div>
@@ -154,7 +165,8 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/jquery.simplecolorpicker.js"></script>
-        <script src="http://drawki.aws.af.cm/socket.io/socket.io.js"></script>
+        <!--<script src="http://drawki.aws.af.cm/socket.io/socket.io.js"></script>-->
+        <script src="http://192.168.1.15:1337/socket.io/socket.io.js"></script>
         <script src="js/main.js"></script>
     </body>
 </html>

@@ -6,7 +6,8 @@
 
 jQuery(function($){
 
-	var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
+	//var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
+	var iosocket = io.connect("http://192.168.1.15:1337", {'sync disconnect on unload': true});
 
 	var canvas = $('#drawCanvas');
 	var context = canvas[0].getContext('2d');
@@ -15,25 +16,20 @@ jQuery(function($){
 	var lastX;
 	var lastY;
 	var lastEmit = $.now();
+	var usersCurrentlyDrawing = [];
 
-	/* Configure the canvas */
 	var backgroundColor = $('#drawCanvas').css('background-color');
 
 	var drawingSizes = {
-		small: 1,
+		small: 2,
 		medium: 4,
 		large: 9
 	};
 
-	var drawingColors = {
-		pencil: "#000000",
-		eraser: "#3399cc"
+	var localDrawingOptions = {
+		color: "#000000",
+		size: drawingSizes.medium
 	};
-
-
-	var drawingOptions;
-
-
 
 	/**********************/
 	/* Sign in / Sign out */
@@ -42,18 +38,18 @@ jQuery(function($){
 	$('#sign-in').on('submit', function(event) {
 		event.preventDefault();
 
-		/* Hide sign in and show the drawing board */
+		/* Displays the drawing board */
 		$("#intro-description").hide();
 		$("#sign-in-container").hide();
 		$("#drawki").fadeIn();
 
-		/* Set up canvas */
+		/* Canvas settings */
 		var originalWidth = $('#drawingBoard').width();
 		var originalHeight = $('#drawingBoard').height();
 		canvas[0].width = originalWidth;
 		canvas[0].height = originalHeight;
 
-		/* Set up context */
+		/* Context settings */
 		context.lineCap = "round";
 		
 		iosocket.emit('signIn', {
@@ -61,12 +57,11 @@ jQuery(function($){
 			channelName: $('#channel').val()
 		});
 
-		/* Set up color picker */
+		/* Color picker settings */
 		$('select[name="colorpicker"]').simplecolorpicker({
 	  		picker: true
 		}).on('change', function() {
-	  		iosocket.emit('changeDrawingColor', $('select[name="colorpicker"]').val());
-	  		drawingOptions.color = $('select[name="colorpicker"]').val();
+	  		localDrawingOptions.color = $('select[name="colorpicker"]').val();
 		});
 	});
 
@@ -74,10 +69,6 @@ jQuery(function($){
 	iosocket.on("userSignedIn", function(username, channel) {
 		$("#chat-messages-list").append("<li class='message-item text-success'>" + username + " has signed in.</li>");
 	});
-
-	iosocket.on("initOptions", function(defaultDrawingOptions) {
-		drawingOptions = defaultDrawingOptions;
-	})
 
 	iosocket.on("updateConnectedUsers", function(connectedUsers) {
 		$("#number-of-users").text(connectedUsers.length);
@@ -95,53 +86,180 @@ jQuery(function($){
 	/***********/
 
 	/**
-	* Add points to the path and draw the line
+	* Adds points to the path and draws the line using
+	* the specified drawing options
 	*/
 	var draw = function(origX, origY, destX, destY, drawingOptions) {
 		context.strokeStyle = drawingOptions.color;
 		context.lineWidth = drawingOptions.size;
+		context.beginPath();
 		context.moveTo(origX, origY);
 		context.lineTo(destX, destY);
 		context.stroke();
 	};
 
+	var drawCommands = [];
+	var processDrawQueue = null;
+	var timeInterval = 10;
+
+	var startProcessingDrawQueue = function() {
+		if(!processDrawQueue) {
+			processDrawQueue = setInterval(processDrawCommand, timeInterval);
+		}
+	};
+
+	var stopProcessingDrawQueue = function() {
+		if(processDrawQueue) {
+			clearInterval(processDrawQueue);
+			processDrawQueue = null;
+		}
+	};
+
+	/**
+	* Processes each draw command
+	*/
+	var processDrawCommand = function() {
+		if(drawCommands.length === 0) {
+			stopProcessingDrawQueue();
+			return;
+		}
+
+		var drawCommand = drawCommands.pop();
+		
+		draw(drawCommand.origX,
+				drawCommand.origY,
+				drawCommand.destX,
+				drawCommand.destY,
+				drawCommand.drawingOptions);
+	};
+
+
+
+	/****************/
+	/* Mouse events */
+	/****************/
+
 	canvas.mousedown(function(e) {
-		context.beginPath();
 		lastX = e.pageX - this.offsetLeft;
 		lastY = e.pageY - this.offsetTop;
-		iosocket.emit('drawing', lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop);
-		iosocket.emit('updateUsersDrawingList');
-		draw(lastX, lastY, e.pageX - this.offsetLeft - 1, e.pageY - this.offsetTop, drawingOptions);
+
+		var drawCommand = {
+			origX: lastX,
+			origY: lastY,
+			destX: lastX - 1,
+			destY: lastY,
+			drawingOptions: localDrawingOptions
+		};
+
+		iosocket.emit('drawCommand', drawCommand);
+
+		drawCommands.unshift(drawCommand);
+		startProcessingDrawQueue();
+		
 		drawing = true;
 	});
 
 	canvas.mousemove(function(e) {
 		if(drawing) {
 			if($.now() - lastEmit > 20) {
-				iosocket.emit('drawing', lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-				draw(lastX, lastY, e.pageX - this.offsetLeft, e.pageY - this.offsetTop, drawingOptions);
-				lastEmit = $.now();
+				var drawCommand = {
+					origX: lastX,
+					origY: lastY,
+					destX: e.pageX - this.offsetLeft,
+					destY: e.pageY - this.offsetTop,
+					drawingOptions: localDrawingOptions
+				};
+
+				iosocket.emit('drawCommand', drawCommand);
+
+				drawCommands.unshift(drawCommand);
+				startProcessingDrawQueue();
+				
 				lastX = e.pageX - this.offsetLeft;
 				lastY = e.pageY - this.offsetTop;
+
+				lastEmit = $.now();
 			}
 		}
 	});
 
 	canvas.mouseup(function(e) {
 		if(drawing) {
-			iosocket.emit('updateUsersDrawingList');
-			iosocket.emit('resetPath');
 			drawing = false;
+			iosocket.emit('userStoppedDrawing');
 		}
 	});
 
 	canvas.mouseleave(function(e) {
 		if(drawing) {
-			iosocket.emit('updateUsersDrawingList');
-			iosocket.emit('resetPath');
 			drawing = false;
+			iosocket.emit('userStoppedDrawing');
 		}
 	});
+
+
+
+	/****************/
+	/* Touch events */
+	/****************/
+
+	$("#drawCanvas").on('touchstart', function(e) {
+		e.preventDefault();
+		
+		lastX = e.originalEvent.touches[0].pageX - this.offsetLeft;
+		lastY = e.originalEvent.touches[0].pageY - this.offsetTop;
+
+		var drawCommand = {
+			origX: lastX,
+			origY: lastY,
+			destX: lastX - 1,
+			destY: lastY,
+			drawingOptions: localDrawingOptions
+		};
+
+		iosocket.emit('drawCommand', drawCommand);
+
+		drawCommands.unshift(drawCommand);
+		startProcessingDrawQueue();
+		
+		drawing = true;
+	});
+
+	$("#drawCanvas").on('touchmove', function(e) {
+		e.preventDefault();
+
+		if(drawing) {
+			if($.now() - lastEmit > 20) {
+				var drawCommand = {
+					origX: lastX,
+					origY: lastY,
+					destX: e.originalEvent.touches[0].pageX - this.offsetLeft,
+					destY: e.originalEvent.touches[0].pageY - this.offsetTop,
+					drawingOptions: localDrawingOptions
+				};
+
+				iosocket.emit('drawCommand', drawCommand);
+				
+				drawCommands.unshift(drawCommand);
+				startProcessingDrawQueue();
+				
+				lastX = e.originalEvent.touches[0].pageX - this.offsetLeft;
+				lastY = e.originalEvent.touches[0].pageY - this.offsetTop;
+
+				lastEmit = $.now();
+			}
+		}
+	});
+
+	$("#drawCanvas").on('touchend', function(e) {
+		if(drawing) {
+			drawing = false;
+			iosocket.emit('userStoppedDrawing');
+		}
+	});
+
+
+
 
 	iosocket.on('requestCurrentDrawing', function() {
         iosocket.emit('sendCurrentDrawing', canvas[0].toDataURL());
@@ -155,8 +273,16 @@ jQuery(function($){
         };
 	});
 
-	iosocket.on('drawing', function(origX, origY, destX, destY, drawingOptions) {
-		draw(origX, origY, destX, destY, drawingOptions);
+	iosocket.on('drawCommand', function(drawCommand) {
+		var username = drawCommand.username;
+
+		if(usersCurrentlyDrawing.indexOf(username) < 0) {
+			usersCurrentlyDrawing.push(username);
+			updateUsersDrawing();
+		}
+
+		drawCommands.unshift(drawCommand);
+		startProcessingDrawQueue();
 	});
 
 	iosocket.on('eraseDrawing', function() {
@@ -164,16 +290,18 @@ jQuery(function($){
 		context.beginPath();
 	});
 
-	iosocket.on('resetPath', function() {
-		context.beginPath();
-	})
+	iosocket.on('userStoppedDrawing', function(username) {
+		var index = usersCurrentlyDrawing.indexOf(username);
+		usersCurrentlyDrawing.splice(index, 1);
+		updateUsersDrawing();
+	});
 
 
 	/**
-	* Display a new notification when the list of the users, who are
-	* currently drawing, is updated.
+	* Displays a new notification when the list of the users who are
+	* currently drawing is updated.
 	*/
-	iosocket.on('updateUsersDrawingList', function(usersCurrentlyDrawing) {
+	function updateUsersDrawing() {
 		$('#notifications').text('');
 		switch(usersCurrentlyDrawing.length) {
 			case 1:
@@ -197,7 +325,7 @@ jQuery(function($){
 					);
 				break;
 		}
-	});
+	}
 
 
 
@@ -211,36 +339,31 @@ jQuery(function($){
 	});
 
 	$('#eraserButton').click(function() {
-		iosocket.emit('changeDrawingColor', drawingColors.eraser);
-		drawingOptions.color = drawingColors.eraser;
+		localDrawingOptions.color = backgroundColor;
 		$('#pencilButton').removeClass('disabled');
 		$(this).addClass('disabled');
 	});
 
 	$('#pencilButton').click(function() {
-		iosocket.emit('changeDrawingColor', $('select[name="colorpicker"]').val());
-		drawingOptions.color = $('select[name="colorpicker"]').val();
+		localDrawingOptions.color = $('select[name="colorpicker"]').val();
 		$('#eraserButton').removeClass('disabled');
 		$(this).addClass('disabled');
 	});
 
 	$('.dropdown-menu .small').click(function() {
-		iosocket.emit('changeDrawingSize', drawingSizes.small);
-		drawingOptions.size = drawingSizes.small;
+		localDrawingOptions.size = drawingSizes.small;
 		$('.dropdown-menu li').removeClass('active');
 		$(this).addClass('active');
 	});
 
 	$('.dropdown-menu .medium').click(function() {
-		iosocket.emit('changeDrawingSize', drawingSizes.medium);
-		drawingOptions.size = drawingSizes.medium;
+		localDrawingOptions.size = drawingSizes.medium;
 		$('.dropdown-menu li').removeClass('active');
 		$(this).addClass('active');
 	});
 
 	$('.dropdown-menu .large').click(function() {
-		iosocket.emit('changeDrawingSize', drawingSizes.large);
-		drawingOptions.size = drawingSizes.large;
+		localDrawingOptions.size = drawingSizes.large;
 		$('.dropdown-menu li').removeClass('active');
 		$(this).addClass('active');
 	});

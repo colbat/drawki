@@ -109,7 +109,8 @@
       var pos = this.$icon.offset();
       this.$picker.css({
         left: pos.left + this.$icon.width() / 2 - bootstrapArrowWidth, // Middle of the icon
-        top: pos.top + this.$icon.outerHeight()
+        /*top: pos.top + this.$icon.outerHeight()*/
+        top: pos.top - this.$picker.outerHeight() - this.$icon.outerHeight() / 2
       });
 
       this.$picker.show(this.options.delay);
