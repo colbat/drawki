@@ -4,6 +4,7 @@
    Drawki server side code
    ========================================================================== */
 
+
 var port = (process.env.VCAP_APP_PORT || 1337);
 var http = require('http').createServer();
 http.listen(port);
@@ -13,7 +14,7 @@ console.log('Server running on ' + port);
 
 var io = require('socket.io').listen(http);
 
-// If WebSockets are not supported by the server
+// WebSockets are not supported (yet) by the server
 io.set('transports', ['xhr-polling']);
 
 var utils = require('./utils');
@@ -22,26 +23,13 @@ var channelsFilePath = './channels.json';
 
 io.sockets.on('connection', function(client) {
 
-	/* Drawing options */
-	var drawingSizes = {
-		small: 1,
-		medium: 4,
-		large: 9
-	};
-
-	var defaultDrawingOptions = {
-		color: "#000000",
-		eraser: "#3399cc",
-		size: drawingSizes.small
-	};
-
 
 	/**********************/
 	/* Sign in / Sign out */
 	/**********************/
 
 	client.on('signIn', function(signInfos) {
-	    var channelName = signInfos.channelName;
+	    var channelName = signInfos.channelName.toLowerCase();
 	    var userName = signInfos.userName;
 
 	    console.log('Sign in attempt : ' + userName + ' in #' + channelName);
@@ -58,9 +46,7 @@ io.sockets.on('connection', function(client) {
 	    client.username = userName;
 	    client.channel = channelName;
 	    client.signedIn = true;
-	    client.drawingOptions = defaultDrawingOptions;
 	    io.sockets.in(client.channel).emit('userSignedIn', userName, channelName);
-	    io.sockets.in(client.channel).emit('initOptions', defaultDrawingOptions);
 	    client.in(client.channel).broadcast.emit('requestCurrentDrawing');
     	updateConnectedUsers(client.channel);
   	});
@@ -106,55 +92,18 @@ io.sockets.on('connection', function(client) {
 		client.in(client.channel).broadcast.emit('sendCurrentDrawing', currentDrawingImageDataURL);
 	});
 
-	client.on('drawing', function(origX, origY, destX, destY) {
-		client.in(client.channel).broadcast.emit('drawing', origX, origY, destX, destY, client.drawingOptions);
+	client.on('drawCommand', function(drawCommand) {
+		drawCommand.username = client.username;
+		client.in(client.channel).broadcast.emit('drawCommand', drawCommand);
 	});
 
 	client.on('eraseDrawing', function() {
 		io.sockets.in(client.channel).emit('eraseDrawing');
 	});
 
-	client.on('changeDrawingColor', function(color) {
-		client.drawingOptions.color = color;
+	client.on('userStoppedDrawing', function() {
+		client.in(client.channel).broadcast.emit('userStoppedDrawing', client.username);
 	});
-
-	client.on('changeDrawingSize', function(size) {
-		client.drawingOptions.size = size;
-	});
-
-	client.on('resetPath', function() {
-		io.sockets.in(client.channel).emit('resetPath');
-	});
-
-
-	/**
-	* Broadcast to the clients an updated list of the users who are currently drawing
-	*/
-	client.on('updateUsersDrawingList', function() {
-		if(client.isDrawing) {
-			client.isDrawing = false;
-		} else {
-			client.isDrawing = true;
-		}
-		client.in(client.channel).broadcast.emit('updateUsersDrawingList', getUsersCurrentlyDrawing());
-	});
-
-
-  	/**
-  	* Update the list of the users who are currently drawing something
-  	*/
-  	var getUsersCurrentlyDrawing = function (channel) {
-  		var usersCurrentlyDrawing = [];
-  		var connectedSockets = io.sockets.clients(channel);
-
-  		for(var connectedSocket in connectedSockets) {
-  			if(connectedSockets[connectedSocket].isDrawing) {
-  				usersCurrentlyDrawing.push(connectedSockets[connectedSocket].username);
-  			}
-  		}
-  		return usersCurrentlyDrawing;
-  	}
-
 
 
   	/********/
