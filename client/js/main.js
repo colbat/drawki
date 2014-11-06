@@ -6,8 +6,8 @@
 
 jQuery(function($){
 
-	//var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
-	var iosocket = io.connect("http://192.168.1.15:1337", {'sync disconnect on unload': true});
+	var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
+	//var iosocket = io.connect("http://192.168.1.15:1337", {'sync disconnect on unload': true});
 
 	var canvas = $('#drawCanvas');
 	var context = canvas[0].getContext('2d');
@@ -205,7 +205,7 @@ jQuery(function($){
 
 	$("#drawCanvas").on('touchstart', function(e) {
 		e.preventDefault();
-		
+
 		lastX = e.originalEvent.touches[0].pageX - this.offsetLeft;
 		lastY = e.originalEvent.touches[0].pageY - this.offsetTop;
 
