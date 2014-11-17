@@ -32,7 +32,7 @@ jQuery(function($){
 	};
 
 	/* Preload emojis sprite */
-	$("<img />").attr("src", "../img/emojis-sprites.png");
+	$("<img />").attr("src", "img/emojis-sprites.png");
 
 	/* Emojis settings */
 	var emojisPath = 'img/emojis/';
