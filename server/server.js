@@ -29,8 +29,8 @@ io.sockets.on('connection', function(client) {
 	/**********************/
 
 	client.on('signIn', function(signInfos) {
-	    var channelName = signInfos.channelName.toLowerCase();
-	    var userName = signInfos.userName;
+	    var channelName = stripHTML(signInfos.channelName.toLowerCase());
+	    var userName = stripHTML(signInfos.userName);
 
 	    console.log('Sign in attempt : ' + userName + ' in #' + channelName);
 
@@ -114,8 +114,15 @@ io.sockets.on('connection', function(client) {
   	* Handle received messages. 
   	*/
   	client.on('sendMessage', function(message) {
+  		// Strip HTML tags
+  		message = stripHTML(message);
+
     	io.sockets.in(client.channel).emit('sendMessageToClients', client.username, message);
   	});
 
 });
+
+function stripHTML(string) {
+	return string.replace(/<(.|\n)*?>/g, '');
+}
 

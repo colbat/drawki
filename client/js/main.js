@@ -7,7 +7,7 @@
 jQuery(function($){
 
 	var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
-	//var iosocket = io.connect("http://192.168.1.15:1337", {'sync disconnect on unload': true});
+	//var iosocket = io.connect("http://192.168.1.10:1337", {'sync disconnect on unload': true});
 
 	var canvas = $('#drawCanvas');
 	var context = canvas[0].getContext('2d');
@@ -18,7 +18,7 @@ jQuery(function($){
 	var lastEmit = $.now();
 	var usersCurrentlyDrawing = [];
 
-	var backgroundColor = $('#drawCanvas').css('background-color');
+	var backgroundColor = canvas.css('background-color');
 
 	var drawingSizes = {
 		small: 2,
@@ -31,9 +31,48 @@ jQuery(function($){
 		size: drawingSizes.medium
 	};
 
+	/* Preload emojis sprite */
+	$("<img />").attr("src", "../img/emojis-sprites.png");
+
+	/* Emojis settings */
+	var emojisPath = 'img/emojis/';
+
+	/* Emojis custom bindings */
+	var emojiBinds = {
+		":)": ":grinning:",
+		";)": ":wink:",
+		":d": ":smiley:",
+		":D": ":smiley:",
+		":p": ":stuck_out_tongue:",
+		":P": ":stuck_out_tongue:",
+		";p": ":stuck_out_tongue_winking_eye:",
+		";P": ":stuck_out_tongue_winking_eye:",
+		":o": ":open_mouth:",
+		":O": ":open_mouth:",
+		":(": ":worried:",
+		":'(": ":cry:",
+		"<3": ":heart:",
+		":@": ":rage:"
+	}
+
+	var regexSpecials = /([()[{*+.$^\\|?])/g;
+	var emojiPattern = '(:{1}(\\w|-|\\+)+:{1})';
+	var customBindsPattern = '';
+
+	/* Adds custom binds to the pattern */
+	for(var pattern in emojiBinds) {
+		customBindsPattern = customBindsPattern 
+			+ '|' + pattern.replace(regexSpecials, '\\$1');
+	}
+
+	var emojiRegex = new RegExp(emojiPattern + customBindsPattern, 'g');
+
+
+
 	/**********************/
 	/* Sign in / Sign out */
 	/**********************/
+
 
 	$('#sign-in').on('submit', function(event) {
 		event.preventDefault();
@@ -67,7 +106,9 @@ jQuery(function($){
 
 
 	iosocket.on("userSignedIn", function(username, channel) {
-		$("#chat-messages-list").append("<li class='message-item text-success'>" + username + " has signed in.</li>");
+		$("#chat-messages-list").append("<li class='message-item text-success'>" 
+											+ username 
+											+ " has signed in.</li>");
 	});
 
 	iosocket.on("updateConnectedUsers", function(connectedUsers) {
@@ -76,7 +117,9 @@ jQuery(function($){
 
 
 	iosocket.on("clientDisco", function(username) {
-		$("#chat-messages-list").append("<li class='message-item text-error'>" + username + " has signed out.</li>");
+		$("#chat-messages-list").append("<li class='message-item text-error'>" 
+											+ username 
+											+ " has signed out.</li>");
 	});
 
 
@@ -84,6 +127,7 @@ jQuery(function($){
 	/***********/
 	/* Drawing */
 	/***********/
+
 
 	/**
 	* Adds points to the path and draws the line using
@@ -138,6 +182,7 @@ jQuery(function($){
 	/****************/
 	/* Mouse events */
 	/****************/
+
 
 	canvas.mousedown(function(e) {
 		lastX = e.pageX - this.offsetLeft;
@@ -203,6 +248,7 @@ jQuery(function($){
 	/* Touch events */
 	/****************/
 
+
 	$("#drawCanvas").on('touchstart', function(e) {
 		e.preventDefault();
 
@@ -260,6 +306,10 @@ jQuery(function($){
 
 
 
+	/***************************/
+	/* Incoming Drawing Events */
+	/***************************/
+
 
 	iosocket.on('requestCurrentDrawing', function() {
         iosocket.emit('sendCurrentDrawing', canvas[0].toDataURL());
@@ -298,8 +348,8 @@ jQuery(function($){
 
 
 	/**
-	* Displays a new notification when the list of the users who are
-	* currently drawing is updated.
+	* Displays a new notification when the list of the users 
+	* who are currently drawing is updated.
 	*/
 	function updateUsersDrawing() {
 		$('#notifications').text('');
@@ -329,9 +379,10 @@ jQuery(function($){
 
 
 
-	/*********************/
-	/* Draw Tool buttons */
-	/*********************/
+	/**********************/
+	/* Draw Tools buttons */
+	/**********************/
+
 
 	$('#clearButton').click(function() {
 		context.clearRect(0, 0, canvas[0].width, canvas[0].height);
@@ -370,22 +421,118 @@ jQuery(function($){
 
 
 
+
 	/********/
 	/* Chat */
 	/********/
 
+
 	$('#message-to-send').keypress(function(e) {
+		var message = $('#message-to-send').val();
+
 		if(e.which === 13) {
-			iosocket.emit('sendMessage', $('#message-to-send').val());
+			e.preventDefault();
+
+			/* Avoids sending message 
+			when empty */
+			if(message.length <= 0) {
+				return;
+			}
+
+			iosocket.emit('sendMessage', message);
 			$('#message-to-send').val('');
+			$('#emojis-panel').hide();
 		}
 	});
 
+
+	/* Parses and displays incoming messages */
 	iosocket.on("sendMessageToClients", function(username, message) {
-		$("#chat-messages-list").append("<li class='message-item'>" + username + ": " + message + "</li>");
-		$("#chat-messages").animate({scrollTop: $("#chat-messages").prop('scrollHeight')}, 50);
+
+		/* Parses emojis */
+		message = message.replace(emojiRegex, function(match) {
+
+			/* Checks for custom emoji binds */
+			if(emojiBinds.hasOwnProperty(match)) {
+				match = emojiBinds[match];
+			}
+
+			var emojiName = match.substring(1, match.length - 1);
+			var emojiURL = emojisPath + emojiName + '.png';;
+			var replaceValue;
+
+			/* Checks if the emoji exists */
+			$.ajax({
+				url: emojiURL,
+				success: function() {
+					var imgElement = '<img class="emoji" src="' 
+										+ emojiURL 
+										+ '">';		
+					replaceValue = imgElement;
+				},
+				error: function() {
+					replaceValue = match;
+				},
+				async: false
+			});
+
+			return replaceValue;
+		});
+
+		/* Displays the message and keeps the chat box scrolled down */
+		$("#chat-messages-list").append("<li class='message-item'>"
+											+ "<b>" + username + "</b>: " + message 
+											+ "</li>");
+		$("#chat-messages").animate({
+				scrollTop: $("#chat-messages").prop('scrollHeight')
+			}, 50);
 	});
 
+	
+	/* Shows emojis panel */
+	$('#emojis-panel-btn').click(function(e) {
+		$('#emojis-panel').show();
+
+		/* Emojis panel closes only when 
+		clicked outside, binds when the panel
+		is shown, debinds when it's hidden */
+		e.stopPropagation();
+		$(document).on('mousedown', function(e) {
+			var panelItem = $('#emojis-panel');
+			if (!panelItem.is(e.target) 
+		        && panelItem.has(e.target).length === 0) {
+			        panelItem.hide();
+			        $(this).off(e);
+			    }
+		});
+	});
+
+
+	/* Adds emojis in the message */
+	$('.emoji-panel-item').click(function() {
+		var emoji = $(this).children('div').data('code');
+		var text = $('#message-to-send').val();
+
+		$('#message-to-send').focus();
+
+		/* Gets the current cursor position */
+		var cursorStart = $('#message-to-send')[0].selectionStart;
+		var cursorEnd = $('#message-to-send')[0].selectionEnd;
+		var firstPart = text.substring(0, cursorStart);
+		var secondPart = text.substring(cursorEnd, text.length);
+
+		/* Builds message with the emoji inserted 
+		at the current cursor position */
+		text = firstPart + emoji + secondPart;
+		$('#message-to-send').val(text);
+
+		/* Moves the cursor right after the inserted emoji */
+		var newCursorPosition = firstPart.length + emoji.length;
+		$('#message-to-send')[0].selectionStart = newCursorPosition;
+		$('#message-to-send')[0].selectionEnd = newCursorPosition;
+		
+		$('#message-to-send').scrollTop($('#message-to-send')[0].scrollHeight);
+	});
 
 
 	/*********/

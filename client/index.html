@@ -150,11 +150,324 @@
                       </ul>
                     </div>
                     
-                    <div id="chat-input">
-                      <input type="text" id="message-to-send" class="input-block-level" placeholder="Your message">
-                    </div>
+                    <div id="chat-input" class="input-append">
+                      <textarea id="message-to-send" class="input-block-level" rows="2" placeholder="Your message"></textarea>
 
-                </div>
+                      <div id="emojis-panel-btn">
+                        <svg id="smiley-container" width="20px" height="20px">
+                            <circle class="smiley-face" cx="10" cy="10" r="9" />
+                            <path class="smiley-face" d="M6 12.5 C 8 16, 12 16, 14 12.5"/>
+                            <path class="smiley-face" d="M7 10 V 7"/>
+                            <path class="smiley-face" d="M13 10 V 7"/>
+                        </svg>
+                      </div>
+
+                      <div id="emojis-panel" class="well well-small">
+                        <div class="emoji-panel-item">
+                          <div class="sprite-smile" data-code=":smile:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-laughing" data-code=":laughing:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-blush" data-code=":blush:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-smiley" data-code=":smiley:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-heart_eyes" data-code=":heart_eyes:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-kissing_heart" data-code=":kissing_heart:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-flushed" data-code=":flushed:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-wink" data-code=":wink:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-stuck_out_tongue_winking_eye" data-code=":stuck_out_tongue_winking_eye:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-grinning" data-code=":grinning:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-stuck_out_tongue" data-code=":stuck_out_tongue:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-worried" data-code=":worried:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-anguished" data-code=":anguished:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-open_mouth" data-code=":open_mouth:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-expressionless" data-code=":expressionless:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-sweat_smile" data-code=":sweat_smile:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-sweat" data-code=":sweat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-disappointed_relieved" data-code=":disappointed_relieved:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-pensive" data-code=":pensive:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-disappointed" data-code=":disappointed:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-cold_sweat" data-code=":cold_sweat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-persevere" data-code=":persevere:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-cry" data-code=":cry:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-sob" data-code=":sob:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-joy" data-code=":joy:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-astonished" data-code=":astonished:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-scream" data-code=":scream:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-rage" data-code=":rage:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-yum" data-code=":yum:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-mask" data-code=":mask:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-sunglasses" data-code=":sunglasses:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-imp" data-code=":imp:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-smiling_imp" data-code=":smiling_imp:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-neutral_face" data-code=":neutral_face:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-innocent" data-code=":innocent:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-yellow_heart" data-code=":yellow_heart:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-purple_heart" data-code=":purple_heart:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-heart" data-code=":heart:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-green_heart" data-code=":green_heart:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-heartbeat" data-code=":heartbeat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-heartpulse" data-code=":heartpulse:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-notes" data-code=":notes:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-thumbsup" data-code=":thumbsup:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-thumbsdown" data-code=":thumbsdown:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-couple" data-code=":couple:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-family" data-code=":family:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-dancer" data-code=":dancer:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-dancers" data-code=":dancers:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-bride_with_veil" data-code=":bride_with_veil:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-couplekiss" data-code=":couplekiss:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-couple_with_heart" data-code=":couple_with_heart:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-woman" data-code=":woman:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-man" data-code=":man:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-baby" data-code=":baby:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-person_with_blond_hair" data-code=":person_with_blond_hair:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-construction_worker" data-code=":construction_worker:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-cop" data-code=":cop:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-princess" data-code=":princess:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-smiley_cat" data-code=":smiley_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-smile_cat" data-code=":smile_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-heart_eyes_cat" data-code=":heart_eyes_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-kissing_cat" data-code=":kissing_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-smirk_cat" data-code=":smirk_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-scream_cat" data-code=":scream_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-crying_cat_face" data-code=":crying_cat_face:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-joy_cat" data-code=":joy_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-pouting_cat" data-code=":pouting_cat:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-see_no_evil" data-code=":see_no_evil:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-hear_no_evil" data-code=":hear_no_evil:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-speak_no_evil" data-code=":speak_no_evil:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-lips" data-code=":lips:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-kiss" data-code=":kiss:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-tongue" data-code=":tongue:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-love_letter" data-code=":love_letter:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-bust_in_silhouette" data-code=":bust_in_silhouette:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-busts_in_silhouette" data-code=":busts_in_silhouette:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-sunny" data-code=":sunny:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-snowman" data-code=":snowman:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-zap" data-code=":zap:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-dog" data-code=":dog:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-rooster" data-code=":rooster:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-rose" data-code=":rose:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-sun_with_face" data-code=":sun_with_face:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-full_moon_with_face" data-code=":full_moon_with_face:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-new_moon_with_face" data-code=":new_moon_with_face:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-ghost" data-code=":ghost:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-santa" data-code=":santa:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-blue_book" data-code=":blue_book:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-notebook" data-code=":notebook:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-soccer" data-code=":soccer:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-mountain_bicyclist" data-code=":mountain_bicyclist:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-bicyclist" data-code=":bicyclist:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-gem" data-code=":gem:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-ring" data-code=":ring:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-microphone" data-code=":microphone:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-closed_umbrella" data-code=":closed_umbrella:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-birthday" data-code=":birthday:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-cookie" data-code=":cookie:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-house" data-code=":house:"></div>
+                        </div>
+                        <div class="emoji-panel-item">
+                          <div class="sprite-airplane" data-code=":airplane:"></div>
+                        </div>
+                      </div>
+
+                    </div> <!-- End #chat-input -->
+
+                </div> <!-- End #chat -->
 
             </div>
 
@@ -166,7 +479,7 @@
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/jquery.simplecolorpicker.js"></script>
         <script src="http://drawki.aws.af.cm/socket.io/socket.io.js"></script>
-        <!--<script src="http://192.168.1.15:1337/socket.io/socket.io.js"></script>-->
+        <!--<script src="http://192.168.1.10:1337/socket.io/socket.io.js"></script>-->
         <script src="js/main.js"></script>
     </body>
 </html>

@@ -79,29 +79,305 @@ body {
 	position: relative;
 	margin-top: 30px;
 	height: 500px;
-	background-color: #ffffff
+	background-color: #ffffff;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 
 #chat-messages {
-	height: 470px;
+	height: 446px;
 	overflow-y: auto;
 	padding: 1px 3px 1px 3px;
+	word-wrap: break-word;
+}
+
+.message-item {
+	line-height: 25px;
 }
 
 #chat-input {
 	width: 100%;
-	position: absolute;
-	bottom: 0;
 }
 
-#chat-input input {
-	margin-bottom: 0px;
+#chat-input textarea {
+	position: absolute;
+	resize: none;
+	bottom: -10px;
+	padding-right: 24px;
 }
+
+#emojis-panel-btn {
+	position: absolute;
+	right: 0;
+	bottom: 24px;
+	height: 24px;
+	width: 24px;
+	cursor: pointer;
+}
+
+.smiley-face {
+    stroke: #B8B8B8;
+    stroke-width: 2;
+    fill: transparent;
+}
+
+#smiley-container:hover * {
+    stroke: #585858;
+}
+
+#emojis-panel {
+	display: none;
+	position: absolute;
+	padding: 2px !important;
+	width: 282px;
+	height: 282px;
+	bottom: 35px;
+	right: 5px;
+}
+
+#emojis-panel:focus {
+    outline: thin !important;
+}
+
+.emoji-panel-item {
+	float: left;
+	padding: 2px;
+	width: 24px;
+	height: 24px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.emoji-panel-item:hover {
+	background-color: #0077FF;
+}
+
+.emoji {
+	width: 20px;
+	height: 20px;
+}
+
+img[src*="ifre"] {
+    width: 64px;
+	height: 64px;
+}
+
 
 /* Quick, dirty and temp fix for iPad */
 @media (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : landscape) {
-.jumbotron {
-	margin: 5px 0 0;
+	.jumbotron {
+		margin: 5px 0 0;
+	}
 }
+
+
+/*******************************/
+/* EMOTICONS - SPRITE SETTINGS */
+/*******************************/
+
+/* glue: 0.4 hash: 94d10481ed */
+.sprite-zap,
+.sprite-yum,
+.sprite-yellow_heart,
+.sprite-worried,
+.sprite-woman,
+.sprite-wink,
+.sprite-tongue,
+.sprite-thumbsup,
+.sprite-thumbsdown,
+.sprite-sweat_smile,
+.sprite-sweat,
+.sprite-sunny,
+.sprite-sunglasses,
+.sprite-sun_with_face,
+.sprite-stuck_out_tongue_winking_eye,
+.sprite-stuck_out_tongue,
+.sprite-speak_no_evil,
+.sprite-soccer,
+.sprite-sob,
+.sprite-snowman,
+.sprite-smirk_cat,
+.sprite-smiling_imp,
+.sprite-smiley_cat,
+.sprite-smiley,
+.sprite-smile_cat,
+.sprite-smile,
+.sprite-see_no_evil,
+.sprite-scream_cat,
+.sprite-scream,
+.sprite-santa,
+.sprite-rose,
+.sprite-rooster,
+.sprite-ring,
+.sprite-rage,
+.sprite-purple_heart,
+.sprite-princess,
+.sprite-pouting_cat,
+.sprite-person_with_blond_hair,
+.sprite-persevere,
+.sprite-pensive,
+.sprite-open_mouth,
+.sprite-notes,
+.sprite-notebook,
+.sprite-new_moon_with_face,
+.sprite-neutral_face,
+.sprite-mountain_bicyclist,
+.sprite-microphone,
+.sprite-mask,
+.sprite-man,
+.sprite-love_letter,
+.sprite-lips,
+.sprite-laughing,
+.sprite-kissing_heart,
+.sprite-kissing_cat,
+.sprite-kiss,
+.sprite-joy_cat,
+.sprite-joy,
+.sprite-innocent,
+.sprite-imp,
+.sprite-house,
+.sprite-heartpulse,
+.sprite-heartbeat,
+.sprite-heart_eyes_cat,
+.sprite-heart_eyes,
+.sprite-heart,
+.sprite-hear_no_evil,
+.sprite-grinning,
+.sprite-green_heart,
+.sprite-ghost,
+.sprite-gem,
+.sprite-full_moon_with_face,
+.sprite-flushed,
+.sprite-family,
+.sprite-expressionless,
+.sprite-dog,
+.sprite-disappointed_relieved,
+.sprite-disappointed,
+.sprite-dancers,
+.sprite-dancer,
+.sprite-crying_cat_face,
+.sprite-cry,
+.sprite-couplekiss,
+.sprite-couple_with_heart,
+.sprite-couple,
+.sprite-cop,
+.sprite-cookie,
+.sprite-construction_worker,
+.sprite-cold_sweat,
+.sprite-closed_umbrella,
+.sprite-busts_in_silhouette,
+.sprite-bust_in_silhouette,
+.sprite-bride_with_veil,
+.sprite-blush,
+.sprite-blue_book,
+.sprite-birthday,
+.sprite-bicyclist,
+.sprite-baby,
+.sprite-astonished,
+.sprite-anguished,
+.sprite-airplane{background-image:url('../img/emojis-sprites.png');background-repeat:no-repeat}
+.sprite-zap{background-position:0px 0px;width:24px;height:24px;}
+.sprite-yum{background-position:-24px 0px;width:24px;height:24px;}
+.sprite-yellow_heart{background-position:-48px 0px;width:24px;height:24px;}
+.sprite-worried{background-position:-72px 0px;width:24px;height:24px;}
+.sprite-woman{background-position:-96px 0px;width:24px;height:24px;}
+.sprite-wink{background-position:-120px 0px;width:24px;height:24px;}
+.sprite-tongue{background-position:-144px 0px;width:24px;height:24px;}
+.sprite-thumbsup{background-position:-168px 0px;width:24px;height:24px;}
+.sprite-thumbsdown{background-position:-192px 0px;width:24px;height:24px;}
+.sprite-sweat_smile{background-position:-216px 0px;width:24px;height:24px;}
+.sprite-sweat{background-position:-240px 0px;width:24px;height:24px;}
+.sprite-sunny{background-position:-264px 0px;width:24px;height:24px;}
+.sprite-sunglasses{background-position:-288px 0px;width:24px;height:24px;}
+.sprite-sun_with_face{background-position:-312px 0px;width:24px;height:24px;}
+.sprite-stuck_out_tongue_winking_eye{background-position:-336px 0px;width:24px;height:24px;}
+.sprite-stuck_out_tongue{background-position:-360px 0px;width:24px;height:24px;}
+.sprite-speak_no_evil{background-position:-384px 0px;width:24px;height:24px;}
+.sprite-soccer{background-position:-408px 0px;width:24px;height:24px;}
+.sprite-sob{background-position:-432px 0px;width:24px;height:24px;}
+.sprite-snowman{background-position:-456px 0px;width:24px;height:24px;}
+.sprite-smirk_cat{background-position:-480px 0px;width:24px;height:24px;}
+.sprite-smiling_imp{background-position:-504px 0px;width:24px;height:24px;}
+.sprite-smiley_cat{background-position:-528px 0px;width:24px;height:24px;}
+.sprite-smiley{background-position:-552px 0px;width:24px;height:24px;}
+.sprite-smile_cat{background-position:-576px 0px;width:24px;height:24px;}
+.sprite-smile{background-position:-600px 0px;width:24px;height:24px;}
+.sprite-see_no_evil{background-position:-624px 0px;width:24px;height:24px;}
+.sprite-scream_cat{background-position:-648px 0px;width:24px;height:24px;}
+.sprite-scream{background-position:-672px 0px;width:24px;height:24px;}
+.sprite-santa{background-position:-696px 0px;width:24px;height:24px;}
+.sprite-rose{background-position:-720px 0px;width:24px;height:24px;}
+.sprite-rooster{background-position:-744px 0px;width:24px;height:24px;}
+.sprite-ring{background-position:-768px 0px;width:24px;height:24px;}
+.sprite-rage{background-position:-792px 0px;width:24px;height:24px;}
+.sprite-purple_heart{background-position:-816px 0px;width:24px;height:24px;}
+.sprite-princess{background-position:-840px 0px;width:24px;height:24px;}
+.sprite-pouting_cat{background-position:-864px 0px;width:24px;height:24px;}
+.sprite-person_with_blond_hair{background-position:-888px 0px;width:24px;height:24px;}
+.sprite-persevere{background-position:-912px 0px;width:24px;height:24px;}
+.sprite-pensive{background-position:-936px 0px;width:24px;height:24px;}
+.sprite-open_mouth{background-position:-960px 0px;width:24px;height:24px;}
+.sprite-notes{background-position:-984px 0px;width:24px;height:24px;}
+.sprite-notebook{background-position:-1008px 0px;width:24px;height:24px;}
+.sprite-new_moon_with_face{background-position:-1032px 0px;width:24px;height:24px;}
+.sprite-neutral_face{background-position:-1056px 0px;width:24px;height:24px;}
+.sprite-mountain_bicyclist{background-position:-1080px 0px;width:24px;height:24px;}
+.sprite-microphone{background-position:-1104px 0px;width:24px;height:24px;}
+.sprite-mask{background-position:-1128px 0px;width:24px;height:24px;}
+.sprite-man{background-position:-1152px 0px;width:24px;height:24px;}
+.sprite-love_letter{background-position:-1176px 0px;width:24px;height:24px;}
+.sprite-lips{background-position:-1200px 0px;width:24px;height:24px;}
+.sprite-laughing{background-position:-1224px 0px;width:24px;height:24px;}
+.sprite-kissing_heart{background-position:-1248px 0px;width:24px;height:24px;}
+.sprite-kissing_cat{background-position:-1272px 0px;width:24px;height:24px;}
+.sprite-kiss{background-position:-1296px 0px;width:24px;height:24px;}
+.sprite-joy_cat{background-position:-1320px 0px;width:24px;height:24px;}
+.sprite-joy{background-position:-1344px 0px;width:24px;height:24px;}
+.sprite-innocent{background-position:-1368px 0px;width:24px;height:24px;}
+.sprite-imp{background-position:-1392px 0px;width:24px;height:24px;}
+.sprite-house{background-position:-1416px 0px;width:24px;height:24px;}
+.sprite-heartpulse{background-position:-1440px 0px;width:24px;height:24px;}
+.sprite-heartbeat{background-position:-1464px 0px;width:24px;height:24px;}
+.sprite-heart_eyes_cat{background-position:-1488px 0px;width:24px;height:24px;}
+.sprite-heart_eyes{background-position:-1512px 0px;width:24px;height:24px;}
+.sprite-heart{background-position:-1536px 0px;width:24px;height:24px;}
+.sprite-hear_no_evil{background-position:-1560px 0px;width:24px;height:24px;}
+.sprite-grinning{background-position:-1584px 0px;width:24px;height:24px;}
+.sprite-green_heart{background-position:-1608px 0px;width:24px;height:24px;}
+.sprite-ghost{background-position:-1632px 0px;width:24px;height:24px;}
+.sprite-gem{background-position:-1656px 0px;width:24px;height:24px;}
+.sprite-full_moon_with_face{background-position:-1680px 0px;width:24px;height:24px;}
+.sprite-flushed{background-position:-1704px 0px;width:24px;height:24px;}
+.sprite-family{background-position:-1728px 0px;width:24px;height:24px;}
+.sprite-expressionless{background-position:-1752px 0px;width:24px;height:24px;}
+.sprite-dog{background-position:-1776px 0px;width:24px;height:24px;}
+.sprite-disappointed_relieved{background-position:-1800px 0px;width:24px;height:24px;}
+.sprite-disappointed{background-position:-1824px 0px;width:24px;height:24px;}
+.sprite-dancers{background-position:-1848px 0px;width:24px;height:24px;}
+.sprite-dancer{background-position:-1872px 0px;width:24px;height:24px;}
+.sprite-crying_cat_face{background-position:-1896px 0px;width:24px;height:24px;}
+.sprite-cry{background-position:-1920px 0px;width:24px;height:24px;}
+.sprite-couplekiss{background-position:-1944px 0px;width:24px;height:24px;}
+.sprite-couple_with_heart{background-position:-1968px 0px;width:24px;height:24px;}
+.sprite-couple{background-position:-1992px 0px;width:24px;height:24px;}
+.sprite-cop{background-position:-2016px 0px;width:24px;height:24px;}
+.sprite-cookie{background-position:-2040px 0px;width:24px;height:24px;}
+.sprite-construction_worker{background-position:-2064px 0px;width:24px;height:24px;}
+.sprite-cold_sweat{background-position:-2088px 0px;width:24px;height:24px;}
+.sprite-closed_umbrella{background-position:-2112px 0px;width:24px;height:24px;}
+.sprite-busts_in_silhouette{background-position:-2136px 0px;width:24px;height:24px;}
+.sprite-bust_in_silhouette{background-position:-2160px 0px;width:24px;height:24px;}
+.sprite-bride_with_veil{background-position:-2184px 0px;width:24px;height:24px;}
+.sprite-blush{background-position:-2208px 0px;width:24px;height:24px;}
+.sprite-blue_book{background-position:-2232px 0px;width:24px;height:24px;}
+.sprite-birthday{background-position:-2256px 0px;width:24px;height:24px;}
+.sprite-bicyclist{background-position:-2280px 0px;width:24px;height:24px;}
+.sprite-baby{background-position:-2304px 0px;width:24px;height:24px;}
+.sprite-astonished{background-position:-2328px 0px;width:24px;height:24px;}
+.sprite-anguished{background-position:-2352px 0px;width:24px;height:24px;}
+.sprite-airplane{background-position:-2376px 0px;width:24px;height:24px;}
+
