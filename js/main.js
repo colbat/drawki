@@ -463,6 +463,7 @@ jQuery(function($){
 
 			/* Checks if the emoji exists */
 			$.ajax({
+				type: 'HEAD',
 				url: emojiURL,
 				success: function() {
 					var imgElement = '<img class="emoji" src="' 
