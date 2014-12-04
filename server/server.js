@@ -5,23 +5,23 @@
    ========================================================================== */
 
 
-var port = (process.env.VCAP_APP_PORT || 1337);
-var http = require('http').createServer();
-http.listen(port);
-console.log('Server running on ' + port);
-
-/* ######## */
-
-var io = require('socket.io').listen(http);
-
-// WebSockets are not supported (yet) by the server
-io.set('transports', ['xhr-polling']);
-
 var utils = require('./utils');
 var channelsFilePath = './channels.json';
 
+var port = process.env.VCAP_APP_PORT || 1337;
 
-io.sockets.on('connection', function(client) {
+var app = require('http').createServer();
+var io = require('socket.io')(app);
+
+app.listen(port, function() {
+	console.log('Listening on: ' + port);
+});
+
+
+var connectedUsers = {};
+
+
+io.on('connection', function(client) {
 
 
 	/**********************/
@@ -40,15 +40,21 @@ io.sockets.on('connection', function(client) {
 	      utils.addChannel(channelsFilePath, channelName);
 	    }
 	    
-	    /* Put the client in the specified channel and get the current drawing of the channel */
+	    /* Put the client in the specified channel and get 
+	    the current drawing of the channel */
 	    client.join(channelName);
 	    console.log(userName + ' joined #' + channelName);
 	    client.username = userName;
 	    client.channel = channelName;
 	    client.signedIn = true;
-	    io.sockets.in(client.channel).emit('userSignedIn', userName, channelName);
+	    io.in(client.channel).emit('userSignedIn', userName, channelName);
 	    client.in(client.channel).broadcast.emit('requestCurrentDrawing');
-    	updateConnectedUsers(client.channel);
+
+    	/* Updates connected users for this channel */
+    	var users = connectedUsers[channelName] || [];
+    	users.push(userName);
+    	connectedUsers[channelName] = users;
+    	io.in(channelName).emit('updateConnectedUsers', users);
   	});
 
 
@@ -57,10 +63,21 @@ io.sockets.on('connection', function(client) {
   	*/
   	client.on('disconnect', function() {
   		if(client.signedIn) {
-			io.sockets.in(client.channel).emit('clientDisco', client.username);
-    		client.leave(client.channel);
+
+  			/* Updates connected users for this channel */
+    		var users = connectedUsers[client.channel];
+    		var userTodelete = users.indexOf(client.username);
+    		users.splice(userTodelete, 1);
+    		io.in(client.channel).emit('updateConnectedUsers', users);
+
+    		/* Delete channel from array if 
+    		the channel is empty */
+    		if(users.length === 0)
+    			delete connectedUsers[client.channel];
+
+    		io.in(client.channel).emit('clientDisco', client.username);
+			client.leave(client.channel);
     		client.signedIn = false;
-    		updateConnectedUsers(client.channel);
   		}
   	});
 
@@ -70,7 +87,7 @@ io.sockets.on('connection', function(client) {
   	*/
   	var updateConnectedUsers = function(channel) {
     	var connectedUsers = [];
-	    var connectedSockets = io.sockets.clients(channel);
+	    var connectedSockets = io.clients(channel);
 	    console.log('Update connected users: ' + connectedSockets.length);
 
 	    /* Update the connected users array depending on the sockets connected in the channel */
@@ -79,7 +96,7 @@ io.sockets.on('connection', function(client) {
 	    }
 
 	    // Send connected users array to the clients
-	    io.sockets.in(channel).emit('updateConnectedUsers', connectedUsers);
+	    io.in(channel).emit('updateConnectedUsers', connectedUsers);
   	};
 
 
@@ -98,7 +115,7 @@ io.sockets.on('connection', function(client) {
 	});
 
 	client.on('eraseDrawing', function() {
-		io.sockets.in(client.channel).emit('eraseDrawing');
+		io.in(client.channel).emit('eraseDrawing');
 	});
 
 	client.on('userStoppedDrawing', function() {
@@ -117,7 +134,7 @@ io.sockets.on('connection', function(client) {
   		// Strip HTML tags
   		message = stripHTML(message);
 
-    	io.sockets.in(client.channel).emit('sendMessageToClients', client.username, message);
+    	io.in(client.channel).emit('sendMessageToClients', client.username, message);
   	});
 
 });
