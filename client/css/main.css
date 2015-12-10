@@ -25,19 +25,18 @@ body {
 	text-align: center;
 }
 .jumbotron h1 {
-	font-size: 72px;
-	line-height: 1;
+	font-size: 60px;
+	margin: 40px 0 0 0;
 }
 
 /* Custome hero-unit */
 .hero-sign-in {
-	margin: 0 auto 20px auto;
+	margin: 40px auto 20px auto;
 	max-width: 220px;
 }
 
 #sign-in {
 	margin: auto;
-	width: 220px;
 }
 
 #sign-in input[type="text"] {
@@ -48,12 +47,13 @@ body {
 }
 
 #drawki {
-	width: 1000px;
+	width: 1200px;
 	margin: auto;
 	display: none;
 }
 
 #drawCanvas {
+	-ms-touch-action: none;
 	background-color: #3399cc;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -61,8 +61,15 @@ body {
 	cursor: crosshair;
 }
 
+.btn-toolbar {
+	margin: 0;
+}
+
 #drawingBoard {
-	height: 500px;
+	width: 900px;
+	height: 540px;
+	margin: auto;
+	float: left;
 }
 
 #connected-users-number {
@@ -77,8 +84,10 @@ body {
 
 #chat {
 	position: relative;
-	margin-top: 30px;
-	height: 500px;
+	margin: 30px 0 0 30px;
+	height: 540px;
+	width: 270px;
+	float: left;
 	background-color: #ffffff;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -164,6 +173,9 @@ img[src*="ifre"] {
 	height: 64px;
 }
 
+.jumbotron {
+	margin: 5px 0 0;
+}
 
 /* Quick, dirty and temp fix for iPad */
 @media (min-device-width : 768px) 
@@ -171,6 +183,39 @@ and (max-device-width : 1024px)
 and (orientation : landscape) {
 	.jumbotron {
 		margin: 5px 0 0;
+	}
+}
+
+@media (max-width : 1200px) {
+	#chat {
+		display: none;
+	}
+
+	#drawki-logo {
+		display: none;
+	}
+
+	#connected-users-number {
+		display: none;
+	}
+}
+
+@media (max-device-width : 480px)
+and (orientation : landscape) {
+	#chat {
+		display: none;
+	}
+
+	#drawki-logo {
+		display: none;
+	}
+
+	#connected-users-number {
+		display: none;
+	}
+
+	@-ms-viewport {
+	  height: 540px;
 	}
 }
 

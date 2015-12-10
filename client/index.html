@@ -22,7 +22,7 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
         
-        <div class="container">
+        <div class="container-intro">
             
             <div id="intro">
 
@@ -41,13 +41,13 @@
                     <div class="clearfix">
                       <label>Name</label>
                       <div class="input">
-                        <input type="text" id="user-name" placeholder="Your name">
+                        <input class="input-large" type="text" id="user-name" placeholder="Your name">
                       </div>
                     </div>
                     <div class="clearfix">
                      <label>Channel</label>
                        <div class="input">
-                        <input type="text" id="channel" placeholder="Channel you want to join">
+                        <input class="input-large" type="text" id="channel" placeholder="Channel you want to join">
                        </div>
                     </div>
                     <input type="submit" value="Let's draw! &raquo;" class="btn btn-large btn-primary">
@@ -61,11 +61,16 @@
         </div>
         
 
-        <div id="drawki" class="container-fluid">
+        <div id="drawki" class="container">
 
-            <div class="row-fluid no-space">
+            <!--<div class="row-fluid no-space">-->
+            <div id="drawki-logo" class="container-narrow">
+                <div class="jumbotron">
+                  <h1>Drawki</h1>
+                </div>
+              </div>
 
-                <div id="drawingBoard" class="span9">
+                <div id="drawingBoard">
                     
                     <p id="connected-users-number">
                       <i class="icon-user"></i>
@@ -143,7 +148,7 @@
                 </div>
                 
                 
-                <div id="chat" class="span3">
+                <div id="chat">
 
                     <div id="chat-messages">
                       <ul id="chat-messages-list" class="unstyled">
@@ -469,7 +474,7 @@
 
                 </div> <!-- End #chat -->
 
-            </div>
+            <!--</div>-->
 
         </div>
         
@@ -478,8 +483,8 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/jquery.simplecolorpicker.js"></script>
-        <script src="http://drawki.aws.af.cm/socket.io/socket.io.js"></script>
-        <!--<script src="http://192.168.1.10:1337/socket.io/socket.io.js"></script>-->
+        <script src="http://drawki.herokuapp.com/socket.io/socket.io.js"></script>
+        <!--<script src="http://192.168.1.14:1337/socket.io/socket.io.js"></script>-->
         <script src="js/main.js"></script>
     </body>
 </html>

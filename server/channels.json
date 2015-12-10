@@ -1,5 +1,13 @@
 [
     {
         "name": "demo"
+    },
+    {
+        "name": "test",
+        "authPassword": "Dig3st0f7H3d347h"
+    },
+    {
+        "name": "demoo",
+        "authPassword": "Dig3st0f7H3d347h"
     }
 ]
