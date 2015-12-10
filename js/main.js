@@ -6,8 +6,8 @@
 
 jQuery(function($){
 
-	var iosocket = io.connect("http://drawki.aws.af.cm", {'sync disconnect on unload': true});
-	//var iosocket = io.connect("http://192.168.1.10:1337", {'sync disconnect on unload': true});
+	var iosocket = io.connect("http://drawki.herokuapp.com", {'sync disconnect on unload': true});
+	//var iosocket = io.connect("http://192.168.1.14:1337", {'sync disconnect on unload': true});
 
 	var canvas = $('#drawCanvas');
 	var context = canvas[0].getContext('2d');
@@ -78,8 +78,7 @@ jQuery(function($){
 		event.preventDefault();
 
 		/* Displays the drawing board */
-		$("#intro-description").hide();
-		$("#sign-in-container").hide();
+		$('.container-intro').hide();
 		$("#drawki").fadeIn();
 
 		/* Canvas settings */
