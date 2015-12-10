@@ -8,7 +8,7 @@
 var utils = require('./utils');
 var channelsFilePath = './channels.json';
 
-var port = process.env.VCAP_APP_PORT || 1337;
+var port = process.env.PORT || 1337;
 
 var app = require('http').createServer();
 var io = require('socket.io')(app);
